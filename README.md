@@ -27,19 +27,12 @@ CREATE USER 'dbdev'@localhost IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'dbdev'@'%' IDENTIFIED by 'password';
 ```
 
-
-##Edit Application Properties
- 
-Location: personalweatherapplication\src\main\resources\application.properties
-```properties
-spring.datasource.url = ${MYSQL_DB_HOST}:${MYSQL_DB_PORT}/pwsdb
-spring.datasource.username = ${MYSQL_DB_USERNAME}
-spring.datasource.password = ${MYSQL_DB_PASSWORD}
-```
-
-
 ##Set Environment Variables
 * MYSQL_DB_HOST=jdbc:mysql://127.17.0.2
 * MYSQL_DB_PORT=3306
 * MYSQL_DB_USERNAME=dbdev
 * MYSQL_DB_PASSWORD=password
+
+##Testing Post Enpoint
+In Postman App, select Import.  Then Copy and past the following in to the link tab.
+https://www.getpostman.com/collections/3f881e85b21ddb72f1c1
