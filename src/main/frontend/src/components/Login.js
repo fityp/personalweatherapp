@@ -25,16 +25,18 @@ const Login = () => {
                          <input
                               className="login-input"
                               type="text"
+                              required='true'
                               name="username"
                               placeholder="Username"
-                              onChange={e => setPassword(e.target.value)}
+                              onChange={e => setUsername(e.target.value)}
                          />
                          <input
                               className="login-input"
                               type="password"
+                              required='true'
                               name="password"
                               placeholder="Password"
-                              onChange={e => setUsername(e.target.value)}
+                              onChange={e => setPassword(e.target.value)}
                          />
 
                          {loading &&
