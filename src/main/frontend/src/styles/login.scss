@@ -32,7 +32,7 @@
                // color: $blue-lightest;
                font-size: 45px;
                font-weight: 500;
-               opacity: 0.8;
+               // opacity: 0.8;
           }
 
           #login-form {
@@ -68,6 +68,11 @@
                          color: $blue-lightest;
                          opacity: 1;
                     }
+               }
+
+               #loading-container {
+                    height: 15%;
+                    margin-top: 30px;
                }
 
                #login-button {
@@ -133,4 +138,37 @@
                color: $blue-lightest;
           }
      }
+
+     .fade-in {
+          animation: fadeIn ease 1.2s;
+          -webkit-animation: fadeIn ease 1.2s;
+          -moz-animation: fadeIn ease 1.2s;
+          -o-animation: fadeIn ease 1.2s;
+          -ms-animation: fadeIn ease 1.2s;
+     }
+}
+
+@keyframes fadeIn {
+     0% {opacity:0;}
+     100% {opacity:1;}
+}
+     
+@-moz-keyframes fadeIn {
+     0% {opacity:0;}
+     100% {opacity:1;}
+}
+     
+@-webkit-keyframes fadeIn {
+     0% {opacity:0;}
+     100% {opacity:1;}
+}
+     
+@-o-keyframes fadeIn {
+     0% {opacity:0;}
+     100% {opacity:1;}
+}
+     
+@-ms-keyframes fadeIn {
+     0% {opacity:0;}
+     100% {opacity:1;}
 }

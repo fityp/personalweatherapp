@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import PulseLoader from 'react-spinners/PulseLoader'
 import '../styles/login.scss'
 
 const Login = () => {
      const [username, setUsername] = useState("");
      const [password, setPassword] = useState("");
-     // const [loading, setLoading] = useState(false);
+     const [loading, setLoading] = useState(false);
 
      const handleSubmit = (e) => {
           e.preventDefault();
+          setLoading(true);
+          setTimeout(() => setLoading(false), 5000)
+          console.log("Form submitted..")
           console.log(username)
           console.log(password)
-          console.log("Form submitted..")
      }
 
      return (
           <section id="login">
-               <section id="login-container">
+               <section id="login-container" className="fade-in">
                     <div id="login-title">Login</div>
                     <form id="login-form" onSubmit={handleSubmit}>
                          <input
@@ -33,14 +36,23 @@ const Login = () => {
                               placeholder="Password"
                               onChange={e => setUsername(e.target.value)}
                          />
-                         <button
-                              id="login-button"
-                              type="submit"
-                              value="Login"
-                              title="Submit form"
-                              className="icon-arrow-right">
-                              <span>Login</span>
-                         </button>
+
+                         {loading &&
+                              <section id="loading-container">
+                                   <PulseLoader size={25} color={"#BBE1FA"} loading={loading} />
+                              </section>
+                         }
+
+                         {!loading &&
+                              <button
+                                   id="login-button"
+                                   type="submit"
+                                   value="Login"
+                                   title="Submit form"
+                                   className="icon-arrow-right">
+                                   <span>Login</span>
+                              </button>
+                         }
                     </form>
                     <Link to='/register' id="link-container">
                          <div id="link">Don't Have An Account? Register Here</div>
