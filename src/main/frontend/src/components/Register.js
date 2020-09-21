@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PulseLoader from 'react-spinners/PulseLoader'
+import axios from 'axios'
 import '../styles/register.scss'
 
 const Register = () => {
@@ -9,16 +10,15 @@ const Register = () => {
      const [verifyPassword, setVerifyPassword] = useState("");
      const [loading, setLoading] = useState(false);
 
-     const handleSubmit = (e) => {
+     const handleSubmit = async (e) => {
           e.preventDefault();
-          if (verifyPassword != password) {
+          if (verifyPassword !== password) {
                alert("Passwords Don't Match!")
           } else {
                setLoading(true);
-               setTimeout(() => setLoading(false), 5000)
-               console.log("Form submitted..")
-               console.log(username)
-               console.log(password)
+               const res = await axios.post('/user/create', { username, password })
+               setLoading(false);
+               console.log(res.data);
           }
      }
 
@@ -30,7 +30,7 @@ const Register = () => {
                          <input
                               className="register-input"
                               type="text"
-                              required='true'
+                              required={true}
                               name="username"
                               placeholder="Username"
                               onChange={e => setUsername(e.target.value)}
@@ -38,7 +38,7 @@ const Register = () => {
                          <input
                               className="register-input"
                               type="password"
-                              required='true'
+                              required={true}
                               name="password"
                               placeholder="Password"
                               onChange={e => setPassword(e.target.value)}
@@ -46,7 +46,7 @@ const Register = () => {
                          <input
                               className="register-input"
                               type="password"
-                              required='true'
+                              required={true}
                               name="password"
                               placeholder="Verify Password"
                               onChange={e => setVerifyPassword(e.target.value)}
