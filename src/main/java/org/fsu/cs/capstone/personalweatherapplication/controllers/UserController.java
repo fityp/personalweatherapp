@@ -21,7 +21,7 @@ public class UserController {
         String name = obj.getString("username");
         String password = obj.getString("password");
         User n = new User();
-        n.setName(name);
+        n.setUsername(name);
         n.setPassword(password);
         userRepository.save(n);
         return "OK";
