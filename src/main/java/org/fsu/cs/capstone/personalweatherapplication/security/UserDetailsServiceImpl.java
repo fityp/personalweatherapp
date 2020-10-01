@@ -1,7 +1,7 @@
 package org.fsu.cs.capstone.personalweatherapplication.security;
 
 
-import org.fsu.cs.capstone.personalweatherapplication.models.MyUserDetails;
+import org.fsu.cs.capstone.personalweatherapplication.models.UserDetailsImpl;
 import org.fsu.cs.capstone.personalweatherapplication.models.User;
 import org.fsu.cs.capstone.personalweatherapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
@@ -27,6 +27,6 @@ public class MyUserDetailsService implements UserDetailsService {
         user.orElseThrow(() -> new UsernameNotFoundException("Not Found: " + username));
 
         // If user found, return the user details
-        return user.map(MyUserDetails::new).get();
+        return user.map(UserDetailsImpl::new).get();
     }
 }

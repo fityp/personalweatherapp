@@ -9,14 +9,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MyUserDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private final String username;
     private final String password;
     private final boolean active;
     private final List<GrantedAuthority> authorities;
 
-    public MyUserDetails(User user) {
+    public UserDetailsImpl(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.active = user.isActive();
