@@ -32,6 +32,7 @@ public class PwaSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/dashboard").hasAnyRole("USER, ADMIN")
                 .antMatchers("/").permitAll()
+                .antMatchers("/data/report").permitAll()
                 .and().formLogin();
 
     }
