@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String processRegistration(ModelAndView modelAndView, BindingResult bindingResult,
+    public String processRegistration(BindingResult bindingResult,
                                       @RequestParam Map<String,String> requestParams,
                                       RedirectAttributes redir) {
         String username = requestParams.get("username");
@@ -52,8 +52,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/login")
+    public ModelAndView showLoginPage(ModelAndView modelAndView, User user) {
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
+
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "greeting";
+        return "dashboard";
     }
 }
