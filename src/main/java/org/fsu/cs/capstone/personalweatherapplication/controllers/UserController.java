@@ -3,11 +3,16 @@ import org.fsu.cs.capstone.personalweatherapplication.models.User;
 import org.fsu.cs.capstone.personalweatherapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
 import java.util.Optional;
 
-@RestController
+@Controller
 public class UserController {
 
     @Autowired
@@ -16,33 +21,39 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // FOR TESTING PURPOSES
-    @GetMapping("/")
-    public String home() {
-        // Checks to see if admin user already exists
-        // If not, create one and add it to the database.
-        Optional<User> user = userRepository.findByUsername("admin");
+    @GetMapping("/register")
+    public ModelAndView showRegistrationPage(ModelAndView modelAndView, User user){
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("register");
+        return modelAndView;
+    }
+
+    @PostMapping("/register")
+    public String processRegistration(ModelAndView modelAndView, BindingResult bindingResult,
+                                      @RequestParam Map<String,String> requestParams,
+                                      RedirectAttributes redir) {
+        String username = requestParams.get("username");
+        String password = requestParams.get("password");
+
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
-            return ("<h1>User already exists..</h1>");
+            bindingResult.reject("username");
+            redir.addFlashAttribute("errorMessage", "That Username already exists");
+            return "redirect:/register";
         } else {
             User newUser = new User();
-            newUser.setUsername("admin");
-            // This step encrypts the password using bcrypt
-            newUser.setPassword(passwordEncoder.encode("password"));
-            newUser.setRoles("ROLE_ADMIN");
+            newUser.setUsername(username);
+            newUser.setPassword(passwordEncoder.encode(password));
+            newUser.setRoles("ROLE_USER");
             newUser.setActive(true);
-            // Save the user to the database
             userRepository.save(newUser);
-            return ("<h1>Created Admin User</h1>");
+            redir.addFlashAttribute("successMessage", "User has been created!");
+            return "redirect:/login";
         }
     }
 
-
-    @GetMapping("/admin")
-    public String admin() {
-        return ("<h1>Welcome Admin</h1>");
-    }
-
     @GetMapping("/dashboard")
-    public String dashboard() { return ("<h1>Welcome to PWA Dashboard</h1>");}
+    public String dashboard() {
+        return "greeting";
+    }
 }
