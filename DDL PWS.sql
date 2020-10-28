@@ -1,20 +1,32 @@
 use pwsdb;
 
-DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS Station;
 DROP TABLE IF EXISTS StationData;
 DROP TABLE IF EXISTS UserStationMapping;
 DROP TABLE IF EXISTS UserCity;
 DROP TABLE IF EXISTS City;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Station;
 
 CREATE TABLE  IF NOT EXISTS User
 (
-user_id INTEGER,
+user_id INTEGER NOT NULL AUTO_INCREMENT,
 user_name VARCHAR (255),
 added_on DATE,
 email VARCHAR (255),
 password VARCHAR (255),
 CONSTRAINT User_pkey PRIMARY KEY (user_id)
+);
+
+CREATE TABLE  IF NOT EXISTS Station
+(
+station_id INTEGER NOT NULL AUTO_INCREMENT,
+stationtype VARCHAR (255),
+model VARCHAR (255),
+freq VARCHAR (255),
+PASSKEY VARCHAR (255),
+ZonedDateTime DATE,
+date_created DATE,
+CONSTRAINT Station_pkey PRIMARY KEY (station_id)
 );
 
 CREATE TABLE  IF NOT EXISTS StationData
@@ -45,18 +57,6 @@ baromabsin FLOAT,
 CONSTRAINT StationData_pkey PRIMARY KEY (station_id,gethered_date)
 );
 
-CREATE TABLE  IF NOT EXISTS Station
-(
-station_id INTEGER,
-stationtype VARCHAR (255),
-model VARCHAR (255),
-freq VARCHAR (255),
-PASSKEY VARCHAR (255),
-ZonedDateTime DATE,
-date_created DATE,
-CONSTRAINT Station_pkey PRIMARY KEY (station_id)
-);
-
 CREATE TABLE  IF NOT EXISTS UserStationMapping
 (
 station_id INTEGER,
@@ -66,7 +66,7 @@ CONSTRAINT UserStationMapping_pkey PRIMARY KEY (station_id,user_id)
 
 CREATE TABLE  IF NOT EXISTS City
 (
-city_id INTEGER,
+city_id INTEGER NOT NULL AUTO_INCREMENT,
 city_name VARCHAR (255),
 zip INTEGER,
 country VARCHAR (255),
