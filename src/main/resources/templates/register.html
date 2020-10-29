@@ -26,7 +26,7 @@
 
                   <div id="title">Register</div>
 
-                  <form autocomplete="off" action="#" th:action="@{/register}" th:object="${user}" method="post"
+                  <form autocomplete="off" action="#" th:action="@{/processRegistration}" th:object="${user}" method="post"
                         class="m-t" role="form" data-toggle="validator">
 
                         <div th:if="${successMessage}" class="alert alert-success" role="alert"
