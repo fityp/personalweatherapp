@@ -60,6 +60,23 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("checkPasskey")
+    public String checkPasskey() {
+        // FOR TESTING PURPOSES
+        // Will need logic to test if user has a valid passkey for PWS
+        boolean passkey = true;
+        if (passkey) {
+            return "redirect:/dashboard";
+        } else {
+            return "redirect:/passkey";
+        }
+    }
+
+    @GetMapping("/passkey")
+    public String passkey() {
+        return "passkey";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
