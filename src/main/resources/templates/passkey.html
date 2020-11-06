@@ -13,13 +13,13 @@
 </head>
 <body>
     <div id="background">
-        <div id="passkey-container">
+        <form th:action="@{/processPasskey}" id="passkey-container" method="post">
             <section class="passkey-title-container">
                 <div class="passkey-title">PWS Passkey</div>
             </section>
-            <input class="passkey-input" placeholder="Passkey" />
-            <button class="passkey-submit">Submit</button>
-        </div>
+            <input required name="passkey" type="number" class="passkey-input" placeholder="Passkey" />
+            <button type="submit" class="passkey-submit">Submit</button>
+        </form>
 
     </div>
 
