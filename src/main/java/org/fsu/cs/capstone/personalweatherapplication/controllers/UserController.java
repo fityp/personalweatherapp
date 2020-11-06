@@ -60,16 +60,30 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("checkPasskey")
+    @GetMapping("/checkPasskey")
     public String checkPasskey() {
-        // FOR TESTING PURPOSES
-        // Will need logic to test if user has a valid passkey for PWS
-        boolean passkey = true;
+        // TODO
+        // 1.) Get the id of current user
+        // 2.) Check UserStationMapping model to see if user has a station id
+        // 3.) If they do, go to /dashboard
+        // 4.) If they don't go to /passkey
+        boolean passkey = false;
         if (passkey) {
             return "redirect:/dashboard";
         } else {
             return "redirect:/passkey";
         }
+    }
+
+    @PostMapping("/processPasskey")
+    public String processPasskey(@RequestParam(name="passkey") Integer passkey) {
+        // TODO
+        // 1.) Get the id of the current user
+        // 2.) Search through UserStationMapping model for the id
+        // 3.) Set the given passkey to that specific id
+        // 4.) Continue to dashboard
+        System.out.println("Passkey is: " + passkey);
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/passkey")
