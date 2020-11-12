@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -19,7 +16,10 @@ import java.util.Date;
 public class StationData {
 
     @Id
-    Integer stationId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int stationDataId;
+    @ManyToOne
+    Station station;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date getheredDate;
     private float tempinf;

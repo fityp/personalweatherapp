@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface StationRepository extends JpaRepository<Station, Integer> {
-    Station findByPasskey(String passkey);
+    Optional<Station> findByPasskey(String passkey);
 }
