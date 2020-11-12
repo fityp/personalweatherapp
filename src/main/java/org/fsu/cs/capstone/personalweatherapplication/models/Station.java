@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -20,16 +17,24 @@ import java.util.Date;
 public class Station {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer station_id;
+    private String passkey;
+    @ManyToOne
+    User stationUser;
     private String stationType;
     private String model;
     private String freq;
-    private String passkey;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date_created;
+    private Date dateCreated;
 
     public Station() {
+
+    }
+
+    public boolean registrationComplete(){
+        return this.stationType != null &&
+                this.model != null &&
+                this.freq != null &&
+                this.dateCreated != null;
 
     }
 }

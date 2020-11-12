@@ -10,11 +10,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class PWSController {
+    private static final int ALLOWED_UPDATE_FREQUENCY = 1*60*1000;
 
     @Autowired
     StationRepository stationRepository;
@@ -25,16 +30,28 @@ public class PWSController {
     @PostMapping ("/data/report")
     public void greetingJsonPost(PWSData pwsData) throws Exception {
 
-        Station station = stationRepository.findByPasskey(pwsData.getPASSKEY());
-        if (station == null) {
+        Optional<Station> ostation = stationRepository.findByPasskey(pwsData.getPASSKEY());
+        Station station = null;
+        if (ostation.isEmpty()){
+            System.out.println(pwsData.getPASSKEY());
+            return;
+        }
+        if (!ostation.get().registrationComplete()) {
             station = Station.builder()
                     .stationType(pwsData.getStationtype())
                     .model(pwsData.getModel())
                     .freq(pwsData.getFreq())
-                    .passkey(pwsData.getPASSKEY()).build();
+                    .passkey(pwsData.getPASSKEY())
+                    .dateCreated(Calendar.getInstance().getTime()).build();
 
             station = stationRepository.saveAndFlush(station);
         }
+        StationData mostRecentStationData = stationDataRepository.findFirstByStationOrderByGetheredDateDesc(ostation.get());
+
+        if (null != mostRecentStationData){
+            if(pwsData.getDateutc().getTime() - mostRecentStationData.getGetheredDate().getTime() < 1*60*1000) return;
+        }
+
 
         StationData newStationData = StationData.builder()
                 .getheredDate(pwsData.getDateutc())
@@ -59,7 +76,7 @@ public class PWSController {
                 .yearlyrainin(pwsData.getYearlyrainin())
                 .totalrainin(pwsData.getTotalrainin())
                 .wh65batt(pwsData.getWh65batt())
-                .stationId(station.getStation_id()).build();
+                .station(ostation.get()).build();
 
         stationDataRepository.saveAndFlush(newStationData);
         System.out.println(pwsData);

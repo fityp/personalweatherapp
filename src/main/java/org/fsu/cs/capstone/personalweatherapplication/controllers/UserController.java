@@ -1,5 +1,7 @@
 package org.fsu.cs.capstone.personalweatherapplication.controllers;
+import org.fsu.cs.capstone.personalweatherapplication.models.Station;
 import org.fsu.cs.capstone.personalweatherapplication.models.User;
+import org.fsu.cs.capstone.personalweatherapplication.repositories.StationRepository;
 import org.fsu.cs.capstone.personalweatherapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,9 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private StationRepository stationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -36,13 +41,19 @@ public class UserController {
 
         String username = user.getUsername();
         String password = user.getPassword();
+        String passkey = user.getPasskey();
 
         Optional<User> theUser = userRepository.findByUsername(username);
-        if (theUser.isPresent()) {
-            bindingResult.reject("username");
-            redir.addFlashAttribute("errorMessage", "That Username already exists");
+        Optional<Station> ostation =  stationRepository.findByPasskey(passkey);
+        if (theUser.isPresent() || ostation.isPresent()) {
+            if (theUser.isPresent()) bindingResult.reject("username");
+            if (ostation.isPresent()) bindingResult.reject("passkey");
+            redir.addFlashAttribute("errorMessage", "That Username or Station PASSKEY already exists");
             return "redirect:/register";
         } else {
+            Station station = Station.builder().passkey(passkey).build();
+            stationRepository.save(station);
+
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setPassword(passwordEncoder.encode(password));
