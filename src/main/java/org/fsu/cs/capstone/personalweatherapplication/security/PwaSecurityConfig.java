@@ -26,10 +26,10 @@ public class PwaSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.cors().and().csrf().disable().authorizeRequests()
+                .antMatchers("/register", "/data/report/**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/dashboard", "/").authenticated()
-                .antMatchers("/register", "/data/report").permitAll()
                 .and()
                 .formLogin().loginPage("/login")
                 .defaultSuccessUrl("/checkPasskey");
