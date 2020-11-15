@@ -4,140 +4,302 @@
     <meta charset="UTF-8"/>
     <title>ReactJS + Spring Data REST</title>
     <!--I got this while following along with an example, I don't know if you want to use it-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-gauges@2.1.7/gauge.min.js"></script>
+
 </head>
 
 <body>
 
-<h1>Dashboard</h1>
-<h2>You are logged in as: <span th:text="${username}"></span></h2>
+<!--TODO: -->
+<!--Add chart for wind speed and wind gust since they're both in mph-->
+<!--Max daily wind gust using canvas gauges DONE-->
+<!--Current humidity using canvas gauges-->
+<!--weekly rain inches using canvas gauges-->
 
-
-<div class="container">
-    <div class="row">
-        <div class="col-6 chart">
-            <canvas id="tempChart" height="400vw" width="400vw"></canvas>
+    <section id="header">
+        <div class="header-title">
+            PWS Dashboard
         </div>
-        <div class="col-6 chart">
-            <canvas id="HumidityChart" height="400vw" width="400vw"></canvas>
-        </div>
+        <form th:action="@{/logout}" method="POST" class="form-container">
+            <input class="logout-button" type="submit" value="Logout"/>
+        </form>
+    </section>
+
+    <div id="content-container">
+        <section id="gauge-container">
+            <section id="wind-dir-container">
+                <div class="gauge-desc">Wind Direction (Current)</div>
+                <canvas id="windDirection"></canvas>
+            </section>
+
+            <section id="daily-wind-gust-container">
+                <div class="gauge-desc">Max Gust (Daily)</div>
+                <canvas id="maxDailyGust"></canvas>
+            </section>
+
+            <section id="humidity-container">
+                <div class="gauge-desc">Humidity % (Current)</div>
+                <canvas id="currentHumidity"></canvas>
+            </section>
+
+            <section id="weekly-rain-container">
+                <div class="gauge-desc">Rainfall (Weekly)</div>
+                <canvas id="weeklyRain"></canvas>
+            </section>
+        </section>
+
+        <section id="temp-chart-container">
+            <canvas id="temperatureChart"></canvas>
+        </section>
     </div>
-    <div class="row">
-        <div class="col-6 chart">
-            <canvas id="RainFallChart" height="400vw" width="400vw"></canvas>
-    </div>
-</div>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
+<!--    ****************** CHART.js ******************-->
 <script>
-    //Temp chart
-    let tempChart=document.getElementById('tempChart').getContext('2d');
-    let tempBar = new Chart(tempChart, {
-        type: 'bar',
-        data: {
-        labels: ['Current', 'Daily', 'Weekly', 'Yearly'],
-        datasets: [{
-            label: 'Degrees F',
-            data: [80, 75, 85, 2],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1,
-            
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+    Chart.defaults.global.defaultFontColor = "rgb(220, 220, 220)";
 
-let HumidityChart=document.getElementById('HumidityChart').getContext('2d');
-    let humidityBar = new Chart(HumidityChart, {
-        type: 'bar',
+    let lineConfig = {
+        type: 'line',
         data: {
-        labels: ['Current', 'Daily', 'Weekly', 'Yearly'],
-        datasets: [{
-            label: 'Percent',
-            data: [76, 78, 76, 75],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1,
-            
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
+            labels: ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm',
+                '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'],
+            datasets: [{
+                label: 'Temperature',
+                backgroundColor: '#ffffff',
+                borderColor: '#3072ff',
+                data: [
+                    70, 70, 69, 69, 68, 67, 65, 62, 64, 66, 69, 71, 72, 73, 76, 76, 73, 73, 72, 72, 71, 70, 70, 70
+                ],
+                fill: false,
             }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: "Today's Temperature"
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Hour'
+                    },
+                    gridLines: {
+                        display: true,
+                        color: "#787878"
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fahrenheit'
+                    },
+                    gridLines: {
+                        display: true,
+                        color: "#787878"
+                    }
+                }]
+            }
         }
-    }
-});
+    };
+    let temperatureChart = document.getElementById('temperatureChart').getContext('2d');
+    let tempLineChart = new Chart(temperatureChart, lineConfig);
 
-//chart stacks for some reason, I haven't really looked into it. Probably because of the bootstrap I was following along with from the example
-let RainFallChart=document.getElementById('RainFallChart').getContext('2d');
-    let rainBar = new Chart(HumidityChart, {
-        type: 'bar',
-        data: {
-        labels: ['Current', 'Weekly', 'Monthly', 'Yearly'],
-        datasets: [{
-            label: 'Inches',
-            data: [0, 1, 4.9, 54],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1,
-            
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+<!--    ****************** CANVAS-GAUGES ******************-->
+    let windDirection = new RadialGauge({
+        value: 296,
+        renderTo: 'windDirection',
+        minValue: 0,
+        maxValue: 360,
+        majorTicks: [
+            "N",
+            "NE",
+            "E",
+            "SE",
+            "S",
+            "SW",
+            "W",
+            "NW",
+            "N"
+        ],
+        minorTicks: 22,
+        ticksAngle: 360,
+        startAngle: 180,
+        strokeTicks: false,
+        highlights: false,
+        colorPlate: "#222",
+        colorMajorTicks: "#f5f5f5",
+        colorMinorTicks: "#ddd",
+        colorNumbers: "#ccc",
+        colorNeedle: "rgba(240, 128, 128, 1)",
+        colorNeedleEnd: "rgba(255, 160, 122, .9)",
+        valueBox: false,
+        valueTextShadow: false,
+        colorCircleInner: "#fff",
+        colorNeedleCircleOuter: "#ccc",
+        needleCircleSize: 15,
+        needleCircleOuter: false,
+        animationRule: "linear",
+        needleType: "line",
+        needleStart: 75,
+        needleEnd: 99,
+        needleWidth: 3,
+        borders: true,
+        borderInnerWidth: 0,
+        borderMiddleWidth: 0,
+        borderOuterWidth: 10,
+        colorBorderOuter: "#ccc",
+        colorBorderOuterEnd: "#ccc",
+        colorNeedleShadowDown: "#222",
+        borderShadowWidth: 0,
+        title: "DIRECTION",
+        fontTitleSize: 19,
+        animationTarget: "plate",
+        animationDuration: 1500,
+        colorTitle: "#f5f5f5",
+        animateOnInit: true
+    }).draw();
+
+    let maxDailyGust = new RadialGauge({
+        value: 21,
+        renderTo: 'maxDailyGust',
+        units: "Mph",
+        minValue: 0,
+        maxValue: 55,
+        majorTicks: [
+            "0",
+            "5",
+            "10",
+            "15",
+            "20",
+            "25",
+            "30",
+            "35",
+            "40",
+            "45",
+            "50",
+            "55"
+        ],
+        minorTicks: 2,
+        strokeTicks: true,
+        highlights: [
+            {
+                "from": 40,
+                "to": 55,
+                "color": "rgba(200, 50, 50, .75)"
+            }
+        ],
+        colorPlate: "#181c21",
+        colorMajorTicks: "#f5f5f5",
+        colorMinorTicks: "#ddd",
+        colorNumbers: "#ccc",
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: "arrow",
+        needleWidth: 2,
+        needleCircleSize: 7,
+        needleCircleOuter: true,
+        needleCircleInner: false,
+        animationDuration: 1500,
+        animationRule: "linear"
+    }).draw();
+
+    let currentHumidity = new LinearGauge({
+        value: 82,
+        renderTo: 'currentHumidity',
+        height: 140,
+        minValue: 0,
+        maxValue: 100,
+        majorTicks: [
+            "0",
+            "20",
+            "40",
+            "60",
+            "80",
+            "100"
+        ],
+        minorTicks: 5,
+        strokeTicks: true,
+        colorPlate: "#181c21",
+        colorNumbers: '#ccc',
+        borderShadowWidth: 0,
+        borders: false,
+        barBeginCircle: false,
+        tickSide: "left",
+        numberSide: "left",
+        needleSide: "left",
+        needleType: "line",
+        needleWidth: 3,
+        colorNeedle: "#f5f5f5",
+        animationDuration: 1500,
+        animationRule: "linear",
+        animationTarget: "plate",
+        barWidth: 5,
+        ticksWidth: 50,
+        ticksWidthMinor: 15
+    }).draw();
+
+    let weeklyRain = new LinearGauge({
+        value: 5,
+        renderTo: 'weeklyRain',
+        height: 175,
+        width: 90,
+        units: "in",
+        minValue: 0,
+        maxValue: 12,
+        majorTicks: [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "12"
+        ],
+        minorTicks: 2,
+        strokeTicks: true,
+        highlights: [
+            {
+                "from": 8,
+                "to": 12,
+                "color": "rgba(200, 50, 50, .75)"
+            }
+        ],
+        colorPlate: "#181c21",
+        colorNumbers: '#ccc',
+        borderShadowWidth: 0,
+        borders: false,
+        needleType: "arrow",
+        needleWidth: 2,
+        animationDuration: 1500,
+        animationRule: "linear",
+        tickSide: "left",
+        numberSide: "left",
+        needleSide: "left",
+        barStrokeWidth: 7,
+        barBeginCircle: false,
+    }).draw();
 
 </script>
 
