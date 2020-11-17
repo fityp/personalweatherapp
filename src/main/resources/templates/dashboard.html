@@ -3,6 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8"/>
     <title>ReactJS + Spring Data REST</title>
+    <!--I got this while following along with an example, I don't know if you want to use it-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet" />
@@ -12,6 +13,12 @@
 </head>
 
 <body>
+    <!---<p th:text="'Hello, ' + ${dateTest != null} ? ${dateTest} : 0 + '!'" />  -->
+<!--TODO: -->
+<!--Add chart for wind speed and wind gust since they're both in mph-->
+<!--Max daily wind gust using canvas gauges DONE-->
+<!--Current humidity using canvas gauges-->
+<!--weekly rain inches using canvas gauges-->
 
     <section id="header">
         <div class="header-title">
@@ -50,23 +57,10 @@
         </section>
     </div>
 
-    <footer id="footer">
-        <section id="developers-container">
-            <div class="footer-heading">Developers</div>
-            <section id="names-container">
-                <div class="footer-subheading">Brandon Batyski</div>
-                <div class="footer-subheading">Dustin Fitzpatrick</div>
-                <div class="footer-subheading">Devin Rucks</div>
-                <div class="footer-subheading">Michael Jeung</div>
-                <div class="footer-subheading">Olha Kit</div>
-            </section>
-        </section>
-    </footer>
-
 
 
 <!--    ****************** CHART.js ******************-->
-<script>
+<script th:inline="javascript">
     Chart.defaults.global.defaultFontColor = "rgb(220, 220, 220)";
 
     let lineConfig = {
@@ -79,7 +73,7 @@
                 backgroundColor: '#ffffff',
                 borderColor: '#3072ff',
                 data: [
-                    70, 70, 69, 69, 68, 67, 65, 62, 64, 66, 69, 71, 72, 73, 76, 76, 73, 73, 72, 72, 71, 70, 70, 70
+                    [[${hours[0]}]], [[${hours[1]}]], [[${hours[2]}]], [[${hours[3]}]], [[${hours[4]}]], [[${hours[5]}]], [[${hours[6]}]], [[${hours[7]}]], [[${hours[8]}]], [[${hours[9]}]], [[${hours[10]}]], [[${hours[11]}]], [[${hours[12]}]], [[${hours[13]}]], [[${hours[14]}]], [[${hours[15]}]], [[${hours[16]}]], [[${hours[17]}]], [[${hours[18]}]], [[${hours[19]}]], [[${hours[20]}]], [[${hours[21]}]], [[${hours[22]}]], [[${hours[23]}]]
                 ],
                 fill: false,
             }]
@@ -129,7 +123,7 @@
 
 <!--    ****************** CANVAS-GAUGES ******************-->
     let windDirection = new RadialGauge({
-        value: 296,
+        value: [[${stationData.winddir != null} ? ${stationData.winddir} : 0]],
         renderTo: 'windDirection',
         minValue: 0,
         maxValue: 360,
@@ -183,7 +177,7 @@
     }).draw();
 
     let maxDailyGust = new RadialGauge({
-        value: 21,
+        value: [[${stationData.maxdailygust != null} ? ${stationData.maxdailygust} : 0]],
         renderTo: 'maxDailyGust',
         units: "Mph",
         minValue: 0,
@@ -227,7 +221,7 @@
     }).draw();
 
     let currentHumidity = new LinearGauge({
-        value: 82,
+        value: [[${stationData.humidityin != null} ? ${stationData.humidityin} : 0]],
         renderTo: 'currentHumidity',
         height: 140,
         minValue: 0,
@@ -262,7 +256,7 @@
     }).draw();
 
     let weeklyRain = new LinearGauge({
-        value: 5,
+        value: [[${stationData.weeklyrainin != null} ? ${stationData.weeklyrainin} : 0]],
         renderTo: 'weeklyRain',
         height: 175,
         width: 90,
