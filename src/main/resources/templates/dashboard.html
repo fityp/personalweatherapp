@@ -3,7 +3,6 @@
 <head lang="en">
     <meta charset="UTF-8"/>
     <title>ReactJS + Spring Data REST</title>
-    <!--I got this while following along with an example, I don't know if you want to use it-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet" />
@@ -14,11 +13,7 @@
 
 <body>
     <!---<p th:text="'Hello, ' + ${dateTest != null} ? ${dateTest} : 0 + '!'" />  -->
-<!--TODO: -->
-<!--Add chart for wind speed and wind gust since they're both in mph-->
-<!--Max daily wind gust using canvas gauges DONE-->
-<!--Current humidity using canvas gauges-->
-<!--weekly rain inches using canvas gauges-->
+
 
     <section id="header">
         <div class="header-title">
@@ -57,9 +52,23 @@
         </section>
     </div>
 
+    <footer id="footer">
+        <section id="developers-container">
+            <div class="footer-heading">Developers</div>
+            <section id="names-container">
+                <div class="footer-subheading">Brandon Batyski</div>
+                <div class="footer-subheading">Dustin Fitzpatrick</div>
+                <div class="footer-subheading">Devin Rucks</div>
+                <div class="footer-subheading">Michael Jeung</div>
+                <div class="footer-subheading">Olha Kit</div>
+            </section>
+        </section>
+    </footer>
 
 
-<!--    ****************** CHART.js ******************-->
+
+
+    <!--    ****************** CHART.js ******************-->
 <script th:inline="javascript">
     Chart.defaults.global.defaultFontColor = "rgb(220, 220, 220)";
 
