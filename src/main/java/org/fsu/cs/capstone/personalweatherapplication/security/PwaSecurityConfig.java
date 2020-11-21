@@ -32,7 +32,7 @@ public class PwaSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/dashboard", "/").authenticated()
                 .and()
                 .formLogin().loginPage("/login")
-                .defaultSuccessUrl("/dashboard")
+                .defaultSuccessUrl("/dashboard", true)
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login");
     }
