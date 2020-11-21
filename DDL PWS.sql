@@ -64,6 +64,8 @@ user_id INTEGER,
 CONSTRAINT UserStationMapping_pkey PRIMARY KEY (station_id,user_id)
 );
 
+-- City and UserCity are Optional features for the future use
+
 CREATE TABLE  IF NOT EXISTS City
 (
 city_id INTEGER NOT NULL AUTO_INCREMENT,
