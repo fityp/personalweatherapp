@@ -93,9 +93,10 @@ public class UserController {
         Optional<User> user = userRepository.findByUsername(username);
         Optional<Station> station = stationRepository.findByPasskey(user.get().getPasskey());
         StationData stationData = stationDataRepository.findFirstByStationOrderByGetheredDateDesc(station.get());
+        if (stationData == null) {stationData = new StationData(); stationData.setGetheredDate(new Date()); } //create default stationData object if none exist in database to avoid dashboard error
         Date stationDate = stationData.getGetheredDate();
         List<StationData> hourlyStationData = stationDataRepository.findByGetheredDateBetween(new Date(stationDate.getTime() - DAY_IN_MS), stationDate);
-        if (stationData == null) {stationData = new StationData();} //create default stationData object if none exist in database to avoid dashboard error
+        
         
        
         //cDate.setTime(stationDate);
@@ -109,7 +110,7 @@ public class UserController {
            if(data.getStation().getPasskey() == station.get().getPasskey()) { hours[(int)(data.getGetheredDate().getTime() % 86400000) / 3600000] = data.getTempf(); } //set temp for appropriate hour for approriate station modulus and / converts miliseconds to hour
         }
         
-        model.addAttribute("username", username);
+        //model.addAttribute("username", username);
         model.addAttribute("stationData", stationData);
         model.addAttribute("hours", hours);
         
