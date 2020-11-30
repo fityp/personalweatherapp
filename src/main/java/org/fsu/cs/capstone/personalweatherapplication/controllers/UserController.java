@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Date;
+import java.util.Calendar; 
 import java.util.List;
 
 import java.util.Optional;
@@ -35,8 +36,9 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
     
     long DAY_IN_MS = 1000 * 60 * 60 * 24;
-    Date date1 = new Date(System.currentTimeMillis() - (4 * DAY_IN_MS)); //offset these two to match Dustins test data from current date i.e. if today is the 16th then set to 4 and 3 to get his data, which was recorded on the 13th
-    Date date2 = new Date(System.currentTimeMillis() - (3 * DAY_IN_MS)); //also, with current data the only offset would be 1 on the first line
+    //Date date1 = new Date(System.currentTimeMillis() - (4 * DAY_IN_MS)); //offset these two to match Dustins test data from current date i.e. if today is the 16th then set to 4 and 3 to get his data, which was recorded on the 13th
+    //Date date2 = new Date(System.currentTimeMillis() - (3 * DAY_IN_MS)); //also, with current data the only offset would be 1 on the first line
+    //Calendar cDate =  Calendar.getInstance();
 
     @GetMapping("/register")
     public String showRegisterPage(Model theModel){
@@ -91,10 +93,14 @@ public class UserController {
         Optional<User> user = userRepository.findByUsername(username);
         Optional<Station> station = stationRepository.findByPasskey(user.get().getPasskey());
         StationData stationData = stationDataRepository.findFirstByStationOrderByGetheredDateDesc(station.get());
-        List<StationData> hourlyStationData = stationDataRepository.findByGetheredDateBetween(date1, date2);
+        Date stationDate = stationData.getGetheredDate();
+        List<StationData> hourlyStationData = stationDataRepository.findByGetheredDateBetween(new Date(stationDate.getTime() - DAY_IN_MS), stationDate);
         if (stationData == null) {stationData = new StationData();} //create default stationData object if none exist in database to avoid dashboard error
         
-        int test = 0;
+       
+        //cDate.setTime(stationDate);
+        
+        //int day = cDate.get(Calendar.DAY_OF_MONTH);
         float[] hours = new float[24]; //index = hour in military time
         //hours[0] = 0;
         
